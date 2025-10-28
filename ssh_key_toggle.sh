@@ -11,7 +11,7 @@ prompt_choice()
   echo "Choose action for $USER:"
   echo "  1 = install key"
   echo "  0 = uninstall key"
-  read -rp "Enter 1 or 0: " choice
+  read -rp "Enter 0 to install the key or 1 to remove it: " choice
   case "$choice" in
     1|0) echo "$choice" ;;
     *) echo "Invalid choice. Run again and enter 1 or 0." >&2; exit 1 ;;
