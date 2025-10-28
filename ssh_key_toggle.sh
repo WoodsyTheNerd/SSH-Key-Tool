@@ -45,11 +45,16 @@ normalize_key()
 }
 
 validate_key() {
-  if have_cmd ssh-keygen; then
-    local tmp; tmp="$(mktemp)"
-    trap 'rm -f "$tmp"' RETURN
+  # Only validate if ssh-keygen exists
+  if command -v ssh-keygen >/dev/null 2>&1; then
+    local tmp
+    tmp="$(mktemp)"
+    trap 't="${tmp-}"; [[ -n "$t" ]] && rm -f "$t"' RETURN
     printf "%s\n" "$1" > "$tmp"
-    ssh-keygen -lf "$tmp" >/dev/null 2>&1 || { echo "Invalid public key format" >&2; exit 5; }
+    if ! ssh-keygen -lf "$tmp" >/dev/null 2>&1; then
+      echo "Invalid public key format" >&2
+      exit 5
+    fi
   fi
 }
 
